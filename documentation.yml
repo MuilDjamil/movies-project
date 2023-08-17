@@ -1,0 +1,518 @@
+openapi: '3.0.2'
+info:
+  title: Movie Service
+  contact:
+    name: Muil Djamil
+    url: https://www.linkedin.com/in/muil-djamil/
+    email: muil.extends.djamil@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit/
+  version: '1.0.0'
+servers:
+  - url: https://localhost:1234
+paths:
+  /movies:
+    get:
+      description: get movies from database
+      parameters:
+      - name: category
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 50
+        description: get movies by category
+        examples:
+          anime:
+            description: filter movies by anime category
+            value: ANIME
+      responses:
+        200:
+          description: success get movies from database
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items: 
+                      type: object
+                      required:
+                        - id
+                        - title
+                        - image
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        title:
+                          type: string
+                          minLength: 1
+                        image:
+                          type: string
+                          minLength: 1
+                        totalEpisode:
+                          type: integer
+                          format: int32
+              examples:
+                all:
+                  value:
+                    success: true
+                    data:
+                      - id: MOV124
+                        name: Jujutsu Kaisen
+                        image: https://static.bandainamcoent.eu/high/jujutsu-kaisen/jujutsu-kaisen-cursed-clash/00-page-setup/JJK-header-mobile2.jpg
+                        totalEpisode: 26
+                      - id: MOV125
+                        name: Shingeki No Kyojin
+                        image: https://myanimelist.net/images/anime/4/84177.jpg
+                        totalEpisode: 18
+                      - id: MOV126
+                        name: Minions
+                        image: https://flxt.tmsimg.com/assets/p11376954_v_h9_bj.jpg
+                      - id: MOV127
+                        name: How to Train your Dragon
+                        image: https://m.media-amazon.com/images/M/MV5BMjIwMDIwNjAyOF5BMl5BanBnXkFtZTgwNDE1MDc2NTM@._V1_.jpg
+                animeCategory:
+                  value:
+                    success: true
+                    data:
+                      - id: 'MOV124'
+                        name: Jujutsu Kaisen
+                        image: https://static.bandainamcoent.eu/high/jujutsu-kaisen/jujutsu-kaisen-cursed-clash/00-page-setup/JJK-header-mobile2.jpg
+                        totalEpisode: 26
+                      - id: 'MOV125'
+                        name: Shingeki No Kyojin
+                        image: https://myanimelist.net/images/anime/4/84177.jpg
+                        totalEpisode: 18
+  /movies/{movieId}:
+    get:
+      description: get movie by id from database
+      parameters:
+      - name: movieId
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 50
+        description: movie path id
+        examples:
+          Minions:
+            description: Minions movie id
+            value: MOV125
+          Jujutsu Kaisen:
+            description: Jujutsu Kaisen movie id
+            value: MOV124
+      responses:
+        200:
+          description: success get movie detail from database
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    required:
+                      - title
+                      - image
+                      - description
+                      - year
+                      - min_age
+                      - subtitle_status
+                      - url
+                    properties:
+                      title:
+                        type: string
+                        minLength: 1
+                      image:
+                        type: string
+                        minLength: 1
+                      description:
+                        type: string
+                        minLength: 1
+                      rating:
+                        type: integer
+                        format: int32
+                      year: 
+                        type: string
+                        minLength: 1
+                      min_age: 
+                        type: integer
+                        format: int32
+                        default: 13
+                      subtitle_status:
+                        type: boolean
+                        default: false
+              examples:
+                Minions:
+                  value:
+                    success: true
+                    data:
+                      title : Minions
+                      image : https://flxt.tmsimg.com/assets/p11376954_v_h9_bj.jpg
+                      description : Minions Stuart, Kevin, and Bob are recruited by Scarlet Overkill, a supervillain who, alongside her inventor husband Herb, hatches a plot to take over the world.
+                      rating : 64
+                      year : 2015
+                      min_age : 13
+                      subtitle_status : true
+                      url : https://www.youtube.com/watch?v=6DxjJzmYsXo
+                Jujutsu Kaisen:
+                  value:
+                    success: true
+                    data:
+                      title : Jujutsu Kaisen
+                      image : https://static.bandainamcoent.eu/high/jujutsu-kaisen/jujutsu-kaisen-cursed-clash/00-page-setup/JJK-header-mobile2.jpg
+                      description : Yuji Itadori, a kind-hearted teenager, joins his school's Occult Club for fun, but discovers that its members are actual sorcerers who can manipulate the energy between beings for their own use. He hears about a cursed talisman - the finger of Sukuna, a demon - and its being targeted by other cursed beings.
+                      rating : 80
+                      year : 2020 
+                      min_age : 13
+                      subtitle_status : true
+                      url : https://www.youtube.com/watch?v=fDKmSkMOkIk
+  /categories:
+    get:
+      description: get movie category from database
+      responses:
+        200:
+          description: success get all category from database
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items: 
+                      type: object
+                      required:
+                        - id
+                        - name
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                          minLength: 1
+              examples:
+                category:
+                  value:
+                    success: true
+                    data:
+                      - id: ANIME
+                        name: Anime
+                      - id: 3DANIMASI
+                        name: Animasi 3D
+  /movies/{movieId}/episodes:          
+    get:
+      description: get Movie episodes
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: movie path id
+          examples:
+            Jujutsu Kaisen:
+              description: Jujutsu Kaisen movie id
+              value: MOV124
+      responses:
+        200:
+          description: success get all episode
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items: 
+                      type: object
+                      required:
+                        - id
+                        - name
+                        - duration
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                          minLength: 1
+                        duration:
+                          type: integer
+                          format: int32
+                          default: 1
+              examples:
+                Jujutsu Kaisen: 
+                  value:
+                    status: success
+                    data: 
+                      - id: MOV125-1
+                        name: Ryomen Sukuna
+                        duration: 1440
+                      - id: MOV125-2
+                        name: For Myself
+                        duration: 1440
+                      - id: MOV125-3
+                        name: Girl of Steel
+                        duration: 1440
+                      - id: MOV125-4
+                        name: Curse Womb Must Die
+                        duration: 1440
+                      - id: MOV125-5
+                        name: Curse Womb Must Die II
+                        duration: 1440
+                      - id: MOV125-6
+                        name: After Rain
+                        duration: 1440
+  /movies/{movieId}/episodes/{episodeId}:
+    get:
+      description: get episode detail from movie
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: movie path id
+          examples:
+            Jujutsu Kaisen:
+              description: Jujutsu Kaisen movie id
+              value: MOV124
+        - name: episodeId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: episode path id
+          examples:
+            Jujutsu Kaisen:
+              description: Jujutsu Kaisen episode id
+              value: MOV124-5
+      responses:
+        200:
+          description: success get episode detail
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - thumbnail
+                      - duration
+                      - url
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                        minLength: 1
+                      thumbnail:
+                        type: string
+                        minLength: 1
+                      duration:
+                        type: integer
+                        format: int32
+                        default: 1
+                      url:
+                        type: string
+                        minLength: 1
+              examples:
+                Jujutsu Kaisen:
+                  value:
+                    success: true,
+                    data:
+                      id: MOV125-1
+                      name: Ryomen Sukuna
+                      thumbnail: 
+                      duration: 1440
+                      url: https://youtu.be/miiLadou1cw?list=PLxSscENEp7JisDU6GAJuyNpVwDvCm-f3J
+  /movies/{movieId}/actors:                    
+    get:
+      description: get actors from movie
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: movie path id
+          examples:
+            Jujutsu Kaisen:
+              value: MOV124
+            Descendant of the Sun:
+              value: MOV127
+      responses:
+        200:
+          description: success get actors from movie
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items: 
+                      type: object
+                      required:
+                        - id
+                        - image
+                        - name
+                        - country
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        image:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                          minLength: 1
+                        country:
+                          type: string
+                          minLength: 1
+              examples:
+                Jujutsu Kaisen:
+                  value:
+                    success: true
+                    data: null
+                Descendant of the Sun: 
+                  value:
+                    success: true
+                    data:
+                    - id: ACT1
+                      image: https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Song_Joong-ki_at_Style_Icon_Asia_2016.jpg/800px-Song_Joong-ki_at_Style_Icon_Asia_2016.jpg
+                      name: Song Joong-ki
+                      country: South Korean
+                    - id: ACT2
+                      image: https://shopee.co.id/inspirasi-shopee/wp-content/uploads/2023/04/song-hye-kyo.webp 
+                      name: Song Hye-kyo
+                      country: South Korean    
+  /actors/{actorId}:                    
+    get:
+      description: get actor detail
+      parameters:
+        - name: actorId
+          in: path
+          required: true
+          schema:  
+            type: string
+            minLength: 1
+            maxLength: 50
+          examples:
+            Song Hye-kyo:
+              value: ACT2
+      responses:
+        200:
+          description: success get actor detail
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - country
+                      - job
+                    properties:
+                      id: 
+                        type: string
+                        minLength: 1
+                      name: 
+                        type: string
+                        minLength: 1
+                      name_original:
+                        type: string
+                      image:
+                        type: string
+                      country:
+                        type: string
+                        minLength: 1
+                      synopsis:
+                        type: string
+                      birth:
+                        type: string
+                      height:
+                        type: integer
+                      weight:
+                        type: integer
+                      job:
+                        type: string
+                        minLength: 1
+                      url:
+                        type: string
+              examples:
+                Song Hye-kyo:
+                  value:
+                    success: true
+                    data: 
+                      id: ACT2
+                      name: Song Hye-kyo
+                      name_original: Kang Mo-yeon
+                      image: https://shopee.co.id/inspirasi-shopee/wp-content/uploads/2023/04/song-hye-kyo.webp
+                      country: South Korean 
+                      synopsis: Song Hye-kyo is a South Korean actress. She gained international popularity through her leading roles in the television dramas Autumn in My Heart, All In, Full House, That Winter, the Wind Blows, Descendants of the Sun, Encounter and The Glory.
+                      birth: 22 November 1981
+                      height: 161
+                      weight: null
+                      job: Actor
+                      url: https://en.wikipedia.org/wiki/Song_Hye-kyo
